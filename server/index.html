@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personality Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        h2 { color: #6a0dad; }
+        .question { margin-bottom: 20px; }
+        .result { margin-top: 30px; padding: 15px; border: 2px dashed #6a0dad; background-color: #f9f4ff; }
+        button { padding: 10px 20px; background-color: #6a0dad; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>🧠 Personality Test</h2>
+    <form id="quizForm">
+        <div class="question">
+            <p>1. I enjoy working in teams</p>
+            <select name="q1">
+                <option>Strongly Agree</option>
+                <option>Agree</option>
+                <option>Neutral</option>
+                <option>Disagree</option>
+                <option>Strongly Disagree</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>2. I like to plan ahead</p>
+            <select name="q2">
+                <option>Strongly Agree</option>
+                <option>Agree</option>
+                <option>Neutral</option>
+                <option>Disagree</option>
+                <option>Strongly Disagree</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>3. I prefer quiet environments</p>
+            <select name="q3">
+                <option>Strongly Agree</option>
+                <option>Agree</option>
+                <option>Neutral</option>
+                <option>Disagree</option>
+                <option>Strongly Disagree</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>4. I make friends easily</p>
+            <select name="q4">
+                <option>Strongly Agree</option>
+                <option>Agree</option>
+                <option>Neutral</option>
+                <option>Disagree</option>
+                <option>Strongly Disagree</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>5. I enjoy solving complex problems</p>
+            <select name="q5">
+                <option>Strongly Agree</option>
+                <option>Agree</option>
+                <option>Neutral</option>
+                <option>Disagree</option>
+                <option>Strongly Disagree</option>
+            </select>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result" class="result"></div>
+
+    <script>
+        const form = document.getElementById('quizForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const answers = {
+                "Q1": form.q1.value,
+                "Q2": form.q2.value,
+                "Q3": form.q3.value,
+                "Q4": form.q4.value,
+                "Q5": form.q5.value,
+            };
+
+            const prompt = `As a psychologist, analyze the following personality test answers: ${JSON.stringify(answers)}. Provide a short personality analysis in exactly 5 bullet points.`;
+
+            console.log('Prompt being sent from frontend:', prompt);
+
+            try {
+                const res = await fetch('http://localhost:5000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt }),
+                });
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(`HTTP error! status: ${res.status}, message: ${errorData.error || 'Unknown error'}`);
+                }
+
+                const data = await res.json();
+                console.log('Data received:', data);
+                resultDiv.innerHTML = `<h3>Your Personality Insight ✨</h3><ul><li>${data.response.split('\n').filter(line => line.trim() !== '').join('</li><li>')}</li></ul>`;
+            } catch (err) {
+                console.error('Fetch error:', err);
+                resultDiv.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
