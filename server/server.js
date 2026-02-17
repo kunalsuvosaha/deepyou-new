@@ -5,7 +5,7 @@ import 'dotenv/config';
 
 const app = express();
 app.use(express.json());
-const PORT = 5000;
+
 // CORS configuration: Allow requests from all origins for testing
 app.use(
   cors({
@@ -14,13 +14,7 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
-  console.error("❌ API_KEY environment variable not set.");
-  process.exit(1);
-}
+import { PORT, API_KEY } from './config.js';
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
