@@ -14,8 +14,8 @@ export const generateContent = async (req, res) => {
     console.log('Prompt received:', prompt);
 
     try {
-        // Using Gemini 1.5 Flash for faster and more cost-effective generation
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Reverting to gemini-pro as 1.5-flash is not available in this region/tier
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
         const result = await model.generateContent({
             contents: [
