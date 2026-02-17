@@ -14,7 +14,7 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-import { PORT, API_KEY } from './config.js';
+import { sanitizeText } from './utils/sanitize.js';
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
@@ -23,15 +23,7 @@ app.get("/hello", (req, res) => {
 });
 
 
-// Sanitize incoming text prompt
-const sanitizeText = (text) => {
-  return text
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/\u00A0/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-};
+
 
 // Content generation endpoint
 app.post('/generate', async (req, res) => {
