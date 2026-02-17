@@ -50,7 +50,8 @@ app.post('/generate', async (req, res) => {
   console.log('Prompt received:', prompt);
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+    // Using Gemini 1.5 Flash for faster and more cost-effective generation
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model.generateContent({
       contents: [
