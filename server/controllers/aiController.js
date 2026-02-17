@@ -2,6 +2,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { API_KEY } from '../config.js';
 import { sanitizeText } from '../utils/sanitize.js';
 
+console.log("✅ aiController.js LOADED");
+
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const generateContent = async (req, res) => {
@@ -11,11 +13,10 @@ export const generateContent = async (req, res) => {
     }
 
     prompt = sanitizeText(prompt);
-    console.log('Prompt received:', prompt);
 
     try {
-        // Reverting to gemini-pro as 1.5-flash is not available in this region/tier
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        // Using gemini-flash-latest
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
         const result = await model.generateContent({
             contents: [
@@ -33,4 +34,4 @@ export const generateContent = async (req, res) => {
         console.error('❌ Error generating content:', error);
         res.status(500).json({ error: error.message });
     }
-};
+}
